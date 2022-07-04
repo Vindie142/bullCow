@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Bulls and Cows</title>
+</head>
+
+<body>
+	<a class="buttonNum" style="position: absolute; top: 20px; left: 20px;
+								font-size: 20px; font-weight: 2300;" 
+								href="/Log-out">Log out</a>
+	
+	<table align="center">
+		 <tr>
+		 	<td colspan="3"><p class="textEntered" th:text="${input}"/></td>
+		 </tr>
+		 <tr>
+			<td><a class="buttonNum" href="/?butt=7">7</a></td>
+			<td><a class="buttonNum" href="/?butt=8">8</a></td>
+			<td><a class="buttonNum" href="/?butt=9">9</a></td>
+		 </tr>
+		 <tr>
+			<td><a class="buttonNum" href="/?butt=4">4</a></td>
+			<td><a class="buttonNum" href="/?butt=5">5</a></td>
+			<td><a class="buttonNum" href="/?butt=6">6</a></td>
+		 </tr>
+		 <tr>
+			<td><a class="buttonNum" href="/?butt=1">1</a></td>
+			<td><a class="buttonNum" href="/?butt=2">2</a></td>
+			<td><a class="buttonNum" href="/?butt=3">3</a></td>
+		 </tr>
+		 <tr>
+		 	<td></td>
+			<td><a class="buttonNum" href="/?butt=0">0</a></td>
+			<td></td>
+		 </tr>
+	</table>
+
+	<div class="div1" align="right">
+		<p>Your attempts:</p>
+		<div class="div3">
+			<div th:each="attempt : ${attempts}">
+				<p th:text="${attempt}">attempt</p>
+			</div>
+		</div>
+	</div>
+	<div class="div4" align="right">
+		<p>Top Players:</p>
+		<div class="div5">
+			<div th:each="player : ${topPlayers}">
+				<p th:text="${player}">player</p>
+			</div>
+		</div>
+	</div>
+
+	<style>
+	@import url("https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@600&display=swap");
+		body {
+		  margin: 0;
+		  padding: 0;
+		  box-sizing: border-box;
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		  height: 100vh;
+		  background: linear-gradient(45deg, greenyellow, dodgerblue);
+		  font-family: "Sansita Swashed", cursive;
+		}
+		.div1 {
+		  position: absolute;
+		  top: 20px;
+		  right: 20px;
+		  width: 250px;
+		  font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+		  margin:5px;
+		  padding:5px;
+		  background-color: #FFFFFF;
+		  border: 1px solid #222222;
+		  border-radius: 8px;
+		  text-align:center;
+		  float:right;
+		  font-size: 20px;
+		  font-weight: 2700;
+		}
+		.div3 {
+		  height:400px;
+		  overflow-y: scroll;
+		}
+		.div4 {
+		  position: absolute;
+		  top: 85px;
+		  left: 15px;
+		  width: 350px;
+		  font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+		  margin:5px;
+		  padding:5px;
+		  background-color: #FFFFFF;
+		  border: 1px solid #222222;
+		  border-radius: 8px;
+		  text-align:center;
+		  float:left;
+		  font-size: 20px;
+		  font-weight: 2700;
+		}
+		.div5 {
+		  height:300px;
+		  overflow-y: scroll;
+		}
+		.textEntered
+		{
+		  height: 20px;
+		  margin:5px;
+		  padding:5px;
+		  background-color: #FFFFFF;
+		  border: 1px solid #222222;
+		  border-radius: 8px;
+		  text-align:justify;
+		  font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+		  font-size: 20px;
+		  font-weight: 2700;
+		}
+		.buttonNum {
+		  background-color: #FFFFFF;
+		  border: 1px solid #222222;
+		  border-radius: 8px;
+		  box-sizing: border-box;
+		  color: #222222;
+		  cursor: pointer;
+		  display: inline-block;
+		  font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+		  font-size: 40px;
+		  font-weight: 3900;
+		  line-height: 20px;
+		  margin: 0;
+		  outline: none;
+		  padding: 13px 23px;
+		  position: relative;
+		  text-align: center;
+		  text-decoration: none;
+		  touch-action: manipulation;
+		  transition: box-shadow .2s,-ms-transform .1s,-webkit-transform .1s,transform .1s;
+		  user-select: none;
+		  -webkit-user-select: none;
+		  width: auto;
+		}
+		
+		.buttonNum:focus-visible {
+		  box-shadow: #222222 0 0 0 2px, rgba(255, 255, 255, 0.8) 0 0 0 4px;
+		  transition: box-shadow .2s;
+		}
+		
+		.buttonNum:active {
+		  background-color: #F7F7F7;
+		  border-color: #000000;
+		  transform: scale(.96);
+		}
+		
+		.buttonNum:disabled {
+		  border-color: #DDDDDD;
+		  color: #DDDDDD;
+		  cursor: not-allowed;
+		  opacity: 1;
+		}
+	</style>
+</body>
+
+</html>
