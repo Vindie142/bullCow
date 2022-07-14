@@ -4,58 +4,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.springframework.data.repository.CrudRepository;
 
-import ru.kazberov.bullCow2.models.Game;
 import ru.kazberov.bullCow2.models.User;
 
 public interface UserRepository extends CrudRepository<User, Long> {
 	
 	// checks a user for existence
 	public default boolean checkUser(String checkName){
-		Iterable<User> users = findAll();
-		for (User u : users) {
-			if (u.getNickname().equals(checkName)) {
-				return true;
-			}
-		}
-		return false;
+		Iterable<User> sourceUsers = findAll();
+		List<User> users = new ArrayList<>();
+		sourceUsers.forEach(a -> users.add(a));
+		
+		return users.stream().anyMatch(u -> u.getNickname().equals(checkName));
 	}
 	
 	// finds the user by nickname and transfers it
 	public default User getUserWithNickname(String Nickname){
-		Iterable<User> users = findAll();
-		for (User u : users) {
-			if (u.getNickname().equals(Nickname)) {
-				return u;
-			}
-		}
-		return null; // won't happen
+		Iterable<User> sourceUsers = findAll();
+		List<User> users = new ArrayList<>();
+		sourceUsers.forEach(a -> users.add(a));
+		
+		return users.stream().filter(u -> u.getNickname().equals(Nickname)).findAny().orElse(null);
 	}
 	
 	// passes an array with the top players
 	public default List<String> getTopPlayers(){
-		Iterable<User> users = findAll();
 		List<String> topPlayers = new ArrayList<String>();
 		Map<Double, User> map = new TreeMap<Double, User>();
+		
+		Iterable<User> sourceUsers = findAll();
+		List<User> users = new ArrayList<>();
+		sourceUsers.forEach(a -> users.add(a));		
+
 		for (User u : users) {
-			int amountAttemps = 0;
-			int amountGames = 0;
-			amountGames += u.getGames().size();
-			for (Game uj : u.getGames()) {
-				amountAttemps += uj.getAttempts().size();
-			}
-			// if the last game is not completed, then we do not consider it
-			if (!u.getGames().get(u.getGames().size()-1).getVictory()) {
-				amountGames -= 1;
-				amountAttemps -= u.getGames().get(u.getGames().size()-1).getAttempts().size();
-			}
+			List<Integer> numOfAttemptsInGame = u.getGames().stream()
+												.filter(g -> g.getVictory())
+												.map(g -> g.getAttempts().size())
+												.collect(Collectors.toList());
 			// we record the players and their result in the map for sorting
-			if (amountGames > 0) {
-				double amountAttempsD = amountAttemps;
-				double amountGamesD = amountGames;
-				double playerEfficiency = amountAttempsD / amountGamesD;
+			if (numOfAttemptsInGame.size() > 0) {
+				double playerEfficiency = numOfAttemptsInGame.stream().mapToDouble(e -> e).average().orElse(-1);
 				// solves the key uniqueness problem
 				while (map.containsKey(playerEfficiency)) {
 					playerEfficiency -= 0.000001;

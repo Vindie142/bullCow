@@ -31,7 +31,7 @@ public class Game {
 	private int [] checkedNumber = {-1,-1,-1,-1}; // the number that the user entered
 	@ElementCollection(targetClass=String.class)
 	@Column(name = "attempt")
-	private List<String> attempts; // user attempts
+	private List<String> attempts = new ArrayList<String>(); // user attempts
 	private boolean answerWasGiven = false; // has an answer been given on this attempt
 	private boolean victory = false; // did the victory happen
 	
@@ -40,7 +40,6 @@ public class Game {
 	public Game(User user) { // constructor
 		this.user = user;
 		user.addGame(this);
-		this.attempts = new ArrayList<String>();
 		// comes up with a random number
 		for (int i = 0; i < this.theNumber.length; i++) {
 			// checks the uniqueness of a digit in a number
@@ -63,7 +62,7 @@ public class Game {
 	
 	// accepts the entered number
 	public void takeEntered(String enteredString) {
-	    int enteredInt = Integer.parseInt(enteredString.trim());
+	    int enteredInt = Integer.parseInt(enteredString);
 	    // updates the array after the last response display
 	    if (this.answerWasGiven == true) {
 	    	for (int i = 0; i < this.checkedNumber.length; i++) {
@@ -121,6 +120,23 @@ public class Game {
 		}
 	}
 	
+	// passes a line to the view
+	public String getLine() {
+		String line = "";
+		// if an answer has been given, it outputs the answer
+		if (answerWasGiven == true) {
+			line = attempts.get(attempts.size()-1);
+		} 
+		// if there was no response, then the entered line
+		else {
+			for (int i = 0; i < checkedNumber.length; i++) {
+				if (checkedNumber[i] != -1) {
+					line += checkedNumber[i];
+				}
+			}
+		}
+		return line;
+	}
 	
 	public void setId(Long id) {
 		this.id = id;
@@ -164,24 +180,6 @@ public class Game {
 	}
 	public int [] getCheckedNumber() {
 		return this.checkedNumber;
-	}
-	
-	// passes a line to the view
-	public String getLine() {
-		String line = "";
-		// if an answer has been given, it outputs the answer
-		if (answerWasGiven == true) {
-			line = attempts.get(attempts.size()-1);
-		} 
-		// if there was no response, then the entered line
-		else {
-			for (int i = 0; i < checkedNumber.length; i++) {
-				if (checkedNumber[i] != -1) {
-					line += checkedNumber[i];
-				}
-			}
-		}
-		return line;
 	}
 	
 }

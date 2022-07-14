@@ -24,14 +24,27 @@ public class User {
 	private String password;
 	
 	@OneToMany(mappedBy="user", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	private List<Game> games;
+	private List<Game> games = new ArrayList<Game>();
 
 	public User () {}
 	
 	public User (String nickname, String password) {
 		this.nickname = nickname;
 		this.password = password;
-		this.games = new ArrayList<Game>();
+	}
+	
+	// creates a new game if it's the first one or the past ones are completed
+	public boolean ifNewGame(){
+		if (games.size() == 0 || this.games.get(this.games.size()-1).getVictory() == true) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+		
+	// gives the current game
+	public Game getCurrentGame(){
+		return this.games.get(this.games.size()-1);
 	}
 	
 	public void addGame(Game game){
@@ -66,17 +79,4 @@ public class User {
 		return this.games;
 	}
 	
-	// creates a new game if it's the first one or the past ones are completed
-	public boolean ifNewGame(){
-		if (games.size() == 0 || this.games.get(this.games.size()-1).getVictory() == true) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	// gives the current game
-	public Game getCurrentGame(){
-		return this.games.get(this.games.size()-1);
-	}
 }

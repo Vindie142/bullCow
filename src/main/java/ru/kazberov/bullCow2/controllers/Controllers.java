@@ -65,10 +65,10 @@ public class Controllers {
     }
     
     @PostMapping("/Registration")
-    public String RegistrationPage(@RequestParam("nickname") String nickname,
+    public String registrationPage(@RequestParam("nickname") String nickname,
     									@RequestParam("password") String password,
     									Model model){
-    	// if there is already such a user
+    	// if there is already such user
     	if (userRepository.checkUser(nickname.trim())) {
     		model.addAttribute("output","This nickname is already registered!!!");
         	return "Registration";
@@ -91,7 +91,7 @@ public class Controllers {
     }
     
     @PostMapping("/Logging-into-account")
-    public String LoggingPage(HttpServletResponse response,
+    public String loggingPage(HttpServletResponse response,
 									@RequestParam("nickname") String nickname,
 									@RequestParam("password") String password,
 									Model model){
