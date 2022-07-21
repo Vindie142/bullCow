@@ -10,4 +10,9 @@ public class BullCow2Application {
 		SpringApplication.run(BullCow2Application.class, args);
 	}
 
+	public static void resetPassword(char[] password) {
+		for (int i = 0; i < password.length; i++) {
+			password[i] = '0';
+		}
+	}
 }
