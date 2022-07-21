@@ -21,21 +21,21 @@ public class User {
 	private Long id;
 	
 	private String nickname;
-	private String password;
+	private int password; // hashCode of password
 	
 	@OneToMany(mappedBy="user", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Game> games = new ArrayList<Game>();
 
 	public User () {}
 	
-	public User (String nickname, String password) {
+	public User (String nickname, int password) {
 		this.nickname = nickname;
 		this.password = password;
 	}
 	
 	// creates a new game if it's the first one or the past ones are completed
 	public boolean ifNewGame(){
-		if (games.size() == 0 || this.games.get(this.games.size()-1).getVictory() == true) {
+		if (games.size() == 0 || games.get(games.size()-1).getVictory() == true) {
 			return true;
 		} else {
 			return false;
@@ -44,11 +44,11 @@ public class User {
 		
 	// gives the current game
 	public Game getCurrentGame(){
-		return this.games.get(this.games.size()-1);
+		return games.get(games.size()-1);
 	}
 	
 	public void addGame(Game game){
-		this.games.add(game);
+		games.add(game);
 	}
 	
 	public void setId(Long id) {
@@ -58,7 +58,7 @@ public class User {
 		this.nickname = nickname;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(int password) {
 		this.password = password;
 	}
 
@@ -70,13 +70,13 @@ public class User {
 		return id;
 	}
 	public String getNickname(){
-		return this.nickname;
+		return nickname;
 	}
-	public String getPassword(){
-		return this.password;
+	public int getPassword(){
+		return password;
 	}
 	public List<Game> getGames(){
-		return this.games;
+		return games;
 	}
 	
 }

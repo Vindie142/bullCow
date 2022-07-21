@@ -1,5 +1,7 @@
 package ru.kazberov.bullCow2.controllers;
 
+import java.util.Arrays;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.kazberov.bullCow2.models.Game;
 import ru.kazberov.bullCow2.models.User;
-import ru.kazberov.bullCow2.repo.UserRepository;
+import ru.kazberov.bullCow2.repo.UserRepo;
 
 @Controller
 public class Controllers {
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepo userRepo;
 	
 	@GetMapping("/")
     public String homePage(@CookieValue(value = "nickname", required = false) String cookieNickname,
@@ -28,29 +30,29 @@ public class Controllers {
 		// if the user is logged in
 		if (cookieNickname != null) {
 			// if the user with which cookie is not found in the database
-			if (!userRepository.checkUser(cookieNickname)) {
+			if (!userRepo.checkUser(cookieNickname)) {
 				return "redirect:/Log-out";
 			}
 			// check if it need to create a new game
-			if (userRepository.getUserWithNickname(cookieNickname).ifNewGame()) {
-				User user = userRepository.getUserWithNickname(cookieNickname);
+			if (userRepo.getUserWithNickname(cookieNickname).ifNewGame()) {
+				User user = userRepo.getUserWithNickname(cookieNickname);
 				new Game(user);
-				userRepository.save(user);
+				userRepo.save(user);
 			}
 			// writing the entered number to the game
 			String butt = request.getParameter("butt");
 			if (butt != null) {
-				userRepository.getUserWithNickname(cookieNickname).getCurrentGame().takeEntered(butt);
+				userRepo.getUserWithNickname(cookieNickname).getCurrentGame().takeEntered(butt);
 			}
 			// saves changes
-			userRepository.save(userRepository.getUserWithNickname(cookieNickname));
+			userRepo.save(userRepo.getUserWithNickname(cookieNickname));
 			// if there was a victory
-			if (userRepository.getUserWithNickname(cookieNickname).getCurrentGame().getVictory()) {
+			if (userRepo.getUserWithNickname(cookieNickname).getCurrentGame().getVictory()) {
 				return "redirect:/Victory";
 			} else {
-				model.addAttribute("topPlayers",userRepository.getTopPlayers());
-				model.addAttribute("input",userRepository.getUserWithNickname(cookieNickname).getCurrentGame().getLine());
-				model.addAttribute("attempts",userRepository.getUserWithNickname(cookieNickname).getCurrentGame().getAttempts());
+				model.addAttribute("topPlayers",userRepo.getTopPlayers());
+				model.addAttribute("input",userRepo.getUserWithNickname(cookieNickname).getCurrentGame().getLine());
+				model.addAttribute("attempts",userRepo.getUserWithNickname(cookieNickname).getCurrentGame().getAttempts());
 				return "Game";
 			}
 		} else { // if the user isn't logged in
@@ -66,15 +68,16 @@ public class Controllers {
     
     @PostMapping("/Registration")
     public String registrationPage(@RequestParam("nickname") String nickname,
-    									@RequestParam("password") String password,
+    									@RequestParam("password") char[] password,
     									Model model){
     	// if there is already such user
-    	if (userRepository.checkUser(nickname.trim())) {
+    	if (userRepo.checkUser(nickname.trim())) {
     		model.addAttribute("output","This nickname is already registered!!!");
         	return "Registration";
 		} else {
-			User user = new User (nickname.trim(), password.trim());
-			userRepository.save(user);
+			User user = new User (nickname.trim(), Arrays.hashCode(password));
+			password = null;
+			userRepo.save(user);
 	    	return "redirect:/Successful-registration";
 		}
     	
@@ -93,16 +96,18 @@ public class Controllers {
     @PostMapping("/Logging-into-account")
     public String loggingPage(HttpServletResponse response,
 									@RequestParam("nickname") String nickname,
-									@RequestParam("password") String password,
+									@RequestParam("password") char[] password,
 									Model model){
     	// if there is no such user
-    	if (!userRepository.checkUser(nickname.trim())) {
+    	if (!userRepo.checkUser(nickname.trim())) {
     		model.addAttribute("output","This nickname isn't registered!!!");
         	return "Logging-into-account";
 		}
     	// if the password does not fit
-    	else if (!userRepository.getUserWithNickname(nickname.trim()).getPassword().equals(password)) {
+    	else if (userRepo.getUserWithNickname(nickname.trim()).getPassword() != Arrays.hashCode(password)) {
+    		password = null;
 			model.addAttribute("output","Incorrect password!!!");
+			model.addAttribute("nickname",nickname);
 			return "Logging-into-account";
 		} else {
 			Cookie cookie = new Cookie("nickname", nickname.trim());
@@ -116,9 +121,9 @@ public class Controllers {
     @GetMapping("/Victory")
     public String victoryPage(@CookieValue(value = "nickname", required = false) String cookieNickname,
     							Model model){
-    	model.addAttribute("topPlayers",userRepository.getTopPlayers());
-    	model.addAttribute("amountAttempts"," "+userRepository.getUserWithNickname(cookieNickname).getCurrentGame().getAttempts().size()+" ");
-		model.addAttribute("attempts",userRepository.getUserWithNickname(cookieNickname).getCurrentGame().getAttempts());
+    	model.addAttribute("topPlayers",userRepo.getTopPlayers());
+    	model.addAttribute("amountAttempts"," "+userRepo.getUserWithNickname(cookieNickname).getCurrentGame().getAttempts().size()+" ");
+		model.addAttribute("attempts",userRepo.getUserWithNickname(cookieNickname).getCurrentGame().getAttempts());
     	return "Victory";
     }
     

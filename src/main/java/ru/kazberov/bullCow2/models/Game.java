@@ -41,7 +41,7 @@ public class Game {
 		this.user = user;
 		user.addGame(this);
 		// comes up with a random number
-		for (int i = 0; i < this.theNumber.length; i++) {
+		for (int i = 0; i < theNumber.length; i++) {
 			// checks the uniqueness of a digit in a number
 			int possibleInt;
 			int checkingQuantityInLoop = 0;
@@ -50,35 +50,36 @@ public class Game {
 				possibleInt = random.nextInt(10);
 				checkingQuantityInLoop = 0;
 				for (int j = 0; j < i; j++) {
-					if (this.theNumber[j] != possibleInt) {
+					if (theNumber[j] != possibleInt) {
 						checkingQuantityInLoop++;
 					}
 				}
 			} while (!(checkingQuantityInLoop == i));
 			
-			this.theNumber[i] = possibleInt;
+			theNumber[i] = possibleInt;
 		}
+		theNumber[0] = 1; theNumber[1] = 2; theNumber[2] = 3; theNumber[3] = 4; // for test
 	}
 	
 	// accepts the entered number
 	public void takeEntered(String enteredString) {
 	    int enteredInt = Integer.parseInt(enteredString);
 	    // updates the array after the last response display
-	    if (this.answerWasGiven == true) {
-	    	for (int i = 0; i < this.checkedNumber.length; i++) {
-	    		this.checkedNumber[i] = -1;
+	    if (answerWasGiven == true) {
+	    	for (int i = 0; i < checkedNumber.length; i++) {
+	    		checkedNumber[i] = -1;
 			}
-	    	this.answerWasGiven = false;
+	    	answerWasGiven = false;
 		}
 	    // enter a digit to the desired location of the array
-		for (int i = 0; i < this.checkedNumber.length; i++) {
-			if (this.checkedNumber[i] == -1) {
-				this.checkedNumber[i] = enteredInt;
+		for (int i = 0; i < checkedNumber.length; i++) {
+			if (checkedNumber[i] == -1) {
+				checkedNumber[i] = enteredInt;
 				break;
 			}
 		}
 		// checks Bulls And Cows if all 4 digits are entered
-		if (this.checkedNumber[3] != -1) {
+		if (checkedNumber[3] != -1) {
 			checkingBullsAndCows();
 		}
 	}
@@ -89,34 +90,34 @@ public class Game {
 		int bulls = 0;
 		int cows = 0;
 		// creates a test array
-		for (int i = 0; i < this.checkedNumber.length; i++) {
-			test[i] = this.checkedNumber[i];
+		for (int i = 0; i < checkedNumber.length; i++) {
+			test[i] = checkedNumber[i];
 		}
 		// checks the bulls
 		for (int i = 0; i < test.length; i++) {
-			if (test[i] == this.theNumber[i]) {
+			if (test[i] == theNumber[i]) {
 				bulls++;
 				test[i] = -1; // resets the cell with a bull so that it isn't a cow
 			}
 		}
 		// checks cows
 		for (int i = 0; i < test.length; i++) {
-			for (int j = 0; j < this.theNumber.length; j++) {
-				if (test[i] == this.theNumber[j]) {
+			for (int j = 0; j < theNumber.length; j++) {
+				if (test[i] == theNumber[j]) {
 					cows++;
 				}
 			}
 		}
 		// writes the current attempt to the sheet
 		String attempt = "";
-		for (int i = 0; i < this.checkedNumber.length; i++) {
-			attempt += this.checkedNumber[i];
+		for (int i = 0; i < checkedNumber.length; i++) {
+			attempt += checkedNumber[i];
 		}
-		this.attempts.add(attempt += " - "+bulls+"Bulls "+cows+"Cows");
-		this.answerWasGiven = true;
+		attempts.add(attempt += " - "+bulls+"Bulls "+cows+"Cows");
+		answerWasGiven = true;
 		// checks the victory
 		if (bulls == 4) {
-			this.victory = true;
+			victory = true;
 		}
 	}
 	
@@ -173,13 +174,13 @@ public class Game {
 		return answerWasGiven;
 	}
 	public List<String> getAttempts() {
-		return this.attempts;
+		return attempts;
 	}
 	public boolean getVictory() {
-		return this.victory;
+		return victory;
 	}
 	public int [] getCheckedNumber() {
-		return this.checkedNumber;
+		return checkedNumber;
 	}
 	
 }

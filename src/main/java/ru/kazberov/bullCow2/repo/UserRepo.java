@@ -10,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import ru.kazberov.bullCow2.models.User;
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepo extends CrudRepository<User, Long> {
 	
 	// checks a user for existence
 	public default boolean checkUser(String checkName){

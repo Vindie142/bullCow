@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import ru.kazberov.bullCow2.models.Game;
 
-public interface GameRepository extends CrudRepository<Game, Long> {
+public interface GameRepo extends CrudRepository<Game, Long> {
 
 }
