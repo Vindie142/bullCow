@@ -79,4 +79,12 @@ public class User {
 		return games;
 	}
 	
+	@Override
+	public String toString() {
+		String nickname = this.nickname == null ? "null" : this.nickname;
+		String games = Integer.toString(this.games.size());
+		return  "User{"+
+				"nickname="+nickname+", "+
+				"games.size()="+games+"}";
+	}
 }

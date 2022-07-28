@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.kazberov.bullCow2.BullCow2Application;
 import ru.kazberov.bullCow2.models.Game;
 import ru.kazberov.bullCow2.models.User;
 import ru.kazberov.bullCow2.repo.UserRepo;
@@ -77,7 +76,7 @@ public class Controllers {
         	return "Registration";
 		} else {
 			User user = new User (nickname.trim(), Arrays.hashCode(password));
-			BullCow2Application.resetPassword(password);
+			Arrays.fill(password, '0');
 			userRepo.save(user);
 	    	return "redirect:/Successful-registration";
 		}
@@ -106,7 +105,7 @@ public class Controllers {
 		}
     	// if the password does not fit
     	else if (userRepo.getUserWithNickname(nickname.trim()).getPassword() != Arrays.hashCode(password)) {
-    		BullCow2Application.resetPassword(password);
+    		Arrays.fill(password, '0');
 			model.addAttribute("output","Incorrect password!!!");
 			model.addAttribute("nickname",nickname);
 			return "Logging-into-account";

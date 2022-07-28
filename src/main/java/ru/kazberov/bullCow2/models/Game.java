@@ -1,6 +1,7 @@
 package ru.kazberov.bullCow2.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -20,7 +21,7 @@ public class Game {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 	
 	@ManyToOne (optional=false)
     @JoinColumn (name="user_id")
@@ -58,7 +59,7 @@ public class Game {
 			
 			theNumber[i] = possibleInt;
 		}
-		theNumber[0] = 1; theNumber[1] = 2; theNumber[2] = 3; theNumber[3] = 4; // for test
+		// theNumber[0] = 1; theNumber[1] = 2; theNumber[2] = 3; theNumber[3] = 4; // for test
 	}
 	
 	// accepts the entered number
@@ -139,7 +140,7 @@ public class Game {
 		return line;
 	}
 	
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public void setUser(User user) {
@@ -161,7 +162,7 @@ public class Game {
 		this.victory = trueFalse;
 	}
 	
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 	public User getUser() {
@@ -183,4 +184,16 @@ public class Game {
 		return checkedNumber;
 	}
 	
+	@Override
+	public String toString() {
+		String user = this.user == null ? "null" : this.user.getNickname();
+		String theNumber = Arrays.toString(this.theNumber);
+		String victory = Boolean.toString(this.victory);
+		String attempts = Integer.toString(this.attempts.size());
+		return  "Game{"+
+				"user="+user+", "+
+				"theNumber="+theNumber+", "+
+				"victory="+victory+", "+
+				"attempts.size()="+attempts+"}";
+	}
 }
